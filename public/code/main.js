@@ -70,6 +70,10 @@ function setup () {
   document.querySelector('form button').addEventListener('click', async e => {
     e.preventDefault()
 
+    // Reset Messages
+    if (document.querySelector('.success-message')) document.querySelector('.success-message').remove()
+    if (document.querySelector('.error-message')) document.querySelector('.error-message').remove()
+
     // Get user input
     const mood = document.querySelector('form input').value
     // Get current image
@@ -99,6 +103,18 @@ function setup () {
     const json = await response.json()
 
     console.log(json)
+    if (json.success) {
+  
+      const message = document.createElement('span')
+      message.classList.add('success-message')
+      message.innerHTML = "Mood has been added"
+      document.querySelector('form').after(message)
+    }else {
+      const message = document.createElement('span')
+      message.classList.add('error-message')
+      message.innerHTML = "Something went wrong"
+      document.querySelector('form').after(message)
+    }
 
   })
 

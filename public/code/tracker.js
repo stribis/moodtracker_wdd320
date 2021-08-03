@@ -7,7 +7,7 @@ async function fetchData () {
   // Use fetch to get data from /api
   const response = await fetch('/api')
   const data = await response.json()
-
+  console.log(data)
 
   let aqText
   let aqClass
@@ -51,6 +51,7 @@ async function fetchData () {
 
     container.innerHTML = `
       <section class="mood_container">
+        <span class="delete-button" data-id="${item._id}">x</span>
         <p class="counter">${counter}</p>
         <p class="data">${new Date(item.timestamp).toLocaleString()}</p>
         <p class="mood">${item.mood}</p>
@@ -77,4 +78,34 @@ async function fetchData () {
 
     document.querySelector('main').append(container)
   })
+
+
+
+  const allMoods = document.querySelectorAll('.mood_container')
+  allMoods.forEach(mood => {
+    mood.addEventListener('click', async e => {
+
+      if (document.querySelector('.success-message')){
+        document.querySelector('.success-message').remove()
+      }
+
+      if (e.target.classList.contains('delete-button')){
+        console.log('deleting', e.target.dataset.id)
+        const response = await fetch(`/delete/${e.target.dataset.id}`)
+        const json = await response.json()
+        console.log(json)
+
+        if (json.success) {
+          const message = document.createElement('span')
+          message.classList.add('success-message')
+          message.innerHTML = "Entry Deleted"
+          document.querySelector('main').after(message)
+        }
+      }
+    })
+  })
+
 }
+
+
+

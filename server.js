@@ -33,6 +33,7 @@ app.post('/api', (req, res) => {
   data.timestamp = timestamp
   // console.log(data)
   database.insert(data)
+  data.success = true
   res.json(data)
 })
 
@@ -46,10 +47,26 @@ app.get('/api', (req, res) => {
       res.end()
     }
     // send data to client
+    
     res.json(data)
     
   })
 
+})
+
+app.get('/delete/:id', (req, res) => {
+  let id = req.params.id
+  console.log(id)
+  database.remove({ _id: id }, {}, function (err, numRemoved) {
+    // numRemoved = 1
+    if (numRemoved > 0 ) {
+      res.json({success:true})
+    } else {
+      console.log(err)
+      res.json(err)
+      // res.end()
+    }
+  });
 })
 
 
